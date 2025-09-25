@@ -23,12 +23,14 @@ import org.jetbrains.annotations.Nullable;
 // import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadView;
+import net.fabricmc.fabric.api.util.TriState;
 import net.vulkanmod.render.chunk.build.frapi.helper.ColorHelper;
 import net.vulkanmod.render.chunk.build.frapi.helper.NormalHelper;
 import net.vulkanmod.render.chunk.build.frapi.helper.TextureHelper;
 import net.vulkanmod.render.chunk.build.frapi.material.RenderMaterialImpl;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 
 import static net.vulkanmod.render.chunk.build.frapi.mesh.EncodingFormat.*;
@@ -134,6 +136,58 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
 		return this;
 	}
 
+	// NEW API - Material properties moved directly to QuadView/MutableQuadView
+	// Based on Fabric 1.21.6+ changes: BlendMode → Nullable BlockRenderLayer
+	@Override
+	public @Nullable RenderType blockRenderLayer() {
+		// TODO: Implement based on stored material data
+		return null; // Default - no specific render layer
+	}
+
+	@Override 
+	public MutableQuadViewImpl blockRenderLayer(@Nullable RenderType renderType) {
+		// TODO: Store render layer information
+		return this;
+	}
+
+	@Override
+	public boolean emissive() {
+		// TODO: Extract from stored material data
+		return false; // Default - not emissive
+	}
+
+	@Override
+	public MutableQuadViewImpl emissive(boolean emissive) {
+		// TODO: Store emissive flag
+		return this;
+	}
+
+	@Override
+	public boolean disableColorIndex() {
+		// TODO: Extract from stored material data
+		return false; // Default - color index enabled
+	}
+
+	@Override
+	public MutableQuadViewImpl disableColorIndex(boolean disable) {
+		// TODO: Store color index disable flag
+		return this;
+	}
+
+	@Override
+	public TriState ambientOcclusion() {
+		// TODO: Extract from stored material data
+		return TriState.DEFAULT; // Default AO behavior
+	}
+
+	@Override
+	public MutableQuadViewImpl ambientOcclusion(TriState ao) {
+		// TODO: Store AO setting
+		return this;
+	}
+
+	// TEMPORARILY DISABLED - Old material API
+	/*
 	@Override
 	public final MutableQuadViewImpl material(RenderMaterial material) {
 		if (material == null) {
@@ -143,6 +197,7 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
 		data[baseIndex + HEADER_BITS] = EncodingFormat.material(data[baseIndex + HEADER_BITS], (RenderMaterialImpl) material);
 		return this;
 	}
+	*/
 
 	@Override
 	public final MutableQuadViewImpl colorIndex(int colorIndex) {
@@ -183,6 +238,40 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
 		return this;
 	}
 
+	// NEW API - Simplified fromBakedQuad method (1.21.6+ changes)
+	@Override
+	public final MutableQuadViewImpl fromBakedQuad(BakedQuad quad) {
+		fromVanilla(quad.getVertices(), 0);
+		data[baseIndex + HEADER_BITS] = EncodingFormat.cullFace(0, null); // No cullFace parameter
+		nominalFace(quad.getDirection());
+		colorIndex(quad.getTintIndex());
+
+		// Handle shade property directly (no material needed)
+		if (!quad.isShade()) {
+			// TODO: Set disable diffuse flag directly on quad
+		}
+
+		// Material properties are now set directly on quad - no material() call needed
+		tag(0);
+
+		// Copy data from BakedQuad instead of calculating properties
+		ModelQuadView quadView = (ModelQuadView) quad;
+		int normal = quadView.getNormal();
+		data[baseIndex + HEADER_FACE_NORMAL] = normal;
+		NormalHelper.unpackNormalTo(normal, faceNormal);
+
+		Direction lightFace = quadView.lightFace();
+		data[baseIndex + HEADER_BITS] = EncodingFormat.lightFace(data[baseIndex + HEADER_BITS], lightFace);
+		data[baseIndex + HEADER_BITS] = EncodingFormat.geometryFlags(data[baseIndex + HEADER_BITS], quadView.getFlags());
+
+		this.facing = quadView.getQuadFacing();
+
+		this.isGeometryInvalid = false;
+		return this;
+	}
+
+	// TEMPORARILY DISABLED - Old fromVanilla method with material parameter
+	/*
 	@Override
 	public final MutableQuadViewImpl fromVanilla(BakedQuad quad, RenderMaterial material, @Nullable Direction cullFace) {
 		fromVanilla(quad.getVertices(), 0);
@@ -212,6 +301,7 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
 		this.isGeometryInvalid = false;
 		return this;
 	}
+	*/
 
 	/**
 	 * Emit the quad without clearing the underlying data.

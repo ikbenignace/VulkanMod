@@ -75,20 +75,16 @@ public class BlockRenderer extends AbstractBlockRenderContext {
     }
 
     protected void endRenderQuad(MutableQuadViewImpl quad) {
-        // TEMPORARILY DISABLED - Material API restructured in 1.21.6+
-        // final RenderMaterial mat = quad.material();
-        // final int colorIndex = mat.disableColorIndex() ? -1 : quad.colorIndex();
-        // final TriState aoMode = mat.ambientOcclusion();
-        final int colorIndex = quad.colorIndex();  // Simplified - no material color index disable
-        final TriState aoMode = TriState.DEFAULT;  // Default AO mode
+        // NEW API - Material properties moved directly to QuadView (1.21.6+ changes)
+        final int colorIndex = quad.disableColorIndex() ? -1 : quad.colorIndex();
+        final TriState aoMode = quad.ambientOcclusion();
         final boolean ao = this.useAO && (aoMode == TriState.TRUE || (aoMode == TriState.DEFAULT && this.defaultAO));
-        // final boolean emissive = mat.emissive();
-        final boolean emissive = false;  // Default - not emissive
-        // final boolean vanillaShade = mat.shadeMode() == ShadeMode.VANILLA;
-        final boolean vanillaShade = true;  // Default - use vanilla shading
+        final boolean emissive = quad.emissive();
+        // Note: shadeMode was removed - always use vanilla shading behavior
+        final boolean vanillaShade = true;
 
-        // TerrainBuilder terrainBuilder = getBufferBuilder(mat.blendMode());
-        TerrainBuilder terrainBuilder = this.terrainBuilder;  // Default builder
+        // Use blockRenderLayer instead of blendMode
+        TerrainBuilder terrainBuilder = getBufferBuilder(quad.blockRenderLayer());
 
         LightPipeline lightPipeline = ao ? this.smoothLightPipeline : this.flatLightPipeline;
 
@@ -97,21 +93,16 @@ public class BlockRenderer extends AbstractBlockRenderContext {
         bufferQuad(terrainBuilder, this.pos, quad, this.quadLightData);
     }
 
-    // TEMPORARILY DISABLED - BlendMode API restructured in 1.21.6+
-    /*
-    private TerrainBuilder getBufferBuilder(BlendMode blendMode) {
-        if (blendMode == BlendMode.DEFAULT) {
+    // NEW API - Use RenderType instead of BlendMode (1.21.6+ changes)
+    private TerrainBuilder getBufferBuilder(@Nullable RenderType renderType) {
+        if (renderType == null) {
             return this.terrainBuilder;
         } else {
-            TerrainRenderType renderType = TerrainRenderType.get(blendMode.blockRenderLayer);
-            renderType = TerrainRenderType.getRemapped(renderType);
-            TerrainBuilder bufferBuilder = this.resources.builderPack.builder(renderType);
-            bufferBuilder.setBlockAttributes(this.blockState);
-
-            return bufferBuilder;
+            // TODO: Map RenderType to TerrainRenderType properly
+            // For now, return default builder
+            return this.terrainBuilder;
         }
     }
-    */
 
     public void bufferQuad(TerrainBuilder terrainBuilder, Vector3f pos, ModelQuadView quad, QuadLightData quadLightData) {
         QuadFacing quadFacing = quad.getQuadFacing();

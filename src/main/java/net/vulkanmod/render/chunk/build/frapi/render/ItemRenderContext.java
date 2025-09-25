@@ -217,10 +217,10 @@ public class ItemRenderContext extends AbstractRenderContext {
 	}
 
 	private void endRenderQuad(MutableQuadViewImpl quad) {
-		final RenderMaterial mat = quad.material();
-		final int colorIndex = mat.disableColorIndex() ? -1 : quad.colorIndex();
-		final boolean emissive = mat.emissive();
-		final VertexConsumer vertexConsumer = getVertexConsumer(mat.blendMode(), mat.glint());
+		// NEW API - Material properties moved directly to QuadView (1.21.6+ changes)
+		final int colorIndex = quad.disableColorIndex() ? -1 : quad.colorIndex();
+		final boolean emissive = quad.emissive();
+		final VertexConsumer vertexConsumer = getVertexConsumer(quad.blockRenderLayer(), null); // glint removed
 
 		colorizeQuad(quad, colorIndex);
 		shadeQuad(quad, emissive);
@@ -255,25 +255,25 @@ public class ItemRenderContext extends AbstractRenderContext {
 	 * Caches custom blend mode / vertex consumers and mimics the logic
 	 * in {@code RenderLayers.getEntityBlockLayer}. Layers other than
 	 * translucent are mapped to cutout.
+	 * 
+	 * NEW API - Use RenderType instead of BlendMode (1.21.6+ changes)
 	 */
-	private VertexConsumer getVertexConsumer(BlendMode blendMode, TriState glintMode) {
+	private VertexConsumer getVertexConsumer(@Nullable RenderType renderType, @Nullable Object glint) {
 		boolean translucent;
-		boolean glint;
+		boolean hasGlint = false; // Simplified - glint handling changed
 
-		if (blendMode == BlendMode.DEFAULT) {
+		if (renderType == null) {
 			translucent = isDefaultTranslucent;
 		} else {
-			translucent = blendMode == BlendMode.TRANSLUCENT;
+			// TODO: Properly determine if RenderType is translucent
+			translucent = false; // Default to non-translucent for now
 		}
 
-		if (glintMode == TriState.DEFAULT) {
-			glint = isDefaultGlint;
-		} else {
-			glint = glintMode == TriState.TRUE;
-		}
+		// TODO: Handle glint properly with new API
+		hasGlint = isDefaultGlint;
 
 		if (translucent) {
-			if (glint) {
+			if (hasGlint) {
 				if (translucentGlintVertexConsumer == null) {
 					translucentGlintVertexConsumer = createTranslucentVertexConsumer(true);
 				}
@@ -287,7 +287,7 @@ public class ItemRenderContext extends AbstractRenderContext {
 				return translucentVertexConsumer;
 			}
 		} else {
-			if (glint) {
+			if (hasGlint) {
 				if (cutoutGlintVertexConsumer == null) {
 					cutoutGlintVertexConsumer = createCutoutVertexConsumer(true);
 				}
