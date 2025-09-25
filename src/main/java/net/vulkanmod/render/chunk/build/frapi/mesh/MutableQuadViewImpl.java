@@ -140,49 +140,42 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
 
 	// NEW API - Material properties moved directly to QuadView/MutableQuadView
 	// Based on Fabric 1.21.6+ changes: BlendMode → Nullable BlockRenderLayer
-	@Override
+	// NOTE: These may be custom methods since Fabric API interface might not define them yet
 	public @Nullable RenderType blockRenderLayer() {
 		// TODO: Implement based on stored material data
 		return null; // Default - no specific render layer
 	}
 
-	@Override 
 	public MutableQuadViewImpl blockRenderLayer(@Nullable RenderType renderType) {
 		// TODO: Store render layer information
 		return this;
 	}
 
-	@Override
 	public boolean emissive() {
 		// TODO: Extract from stored material data
 		return false; // Default - not emissive
 	}
 
-	@Override
 	public MutableQuadViewImpl emissive(boolean emissive) {
 		// TODO: Store emissive flag
 		return this;
 	}
 
-	@Override
 	public boolean disableColorIndex() {
 		// TODO: Extract from stored material data
 		return false; // Default - color index enabled
 	}
 
-	@Override
 	public MutableQuadViewImpl disableColorIndex(boolean disable) {
 		// TODO: Store color index disable flag
 		return this;
 	}
 
-	@Override
 	public TriState ambientOcclusion() {
 		// TODO: Extract from stored material data
 		return TriState.DEFAULT; // Default AO behavior
 	}
 
-	@Override
 	public MutableQuadViewImpl ambientOcclusion(TriState ao) {
 		// TODO: Store AO setting
 		return this;

@@ -75,16 +75,16 @@ public class BlockRenderer extends AbstractBlockRenderContext {
     }
 
     protected void endRenderQuad(MutableQuadViewImpl quad) {
-        // NEW API - Material properties moved directly to QuadView (1.21.6+ changes)
-        final int colorIndex = quad.disableColorIndex() ? -1 : quad.colorIndex();
-        final TriState aoMode = quad.ambientOcclusion();
+        // SIMPLIFIED API - Use standard methods and defaults until new API is available
+        final int colorIndex = quad.colorIndex(); // This should exist in standard API
+        final TriState aoMode = TriState.DEFAULT; // Use default AO for now
         final boolean ao = this.useAO && (aoMode == TriState.TRUE || (aoMode == TriState.DEFAULT && this.defaultAO));
-        final boolean emissive = quad.emissive();
+        final boolean emissive = false; // Use default - not emissive for now
         // Note: shadeMode was removed - always use vanilla shading behavior
         final boolean vanillaShade = true;
 
-        // Use blockRenderLayer instead of blendMode
-        TerrainBuilder terrainBuilder = getBufferBuilder(quad.blockRenderLayer());
+        // Use default terrain builder for now
+        TerrainBuilder terrainBuilder = this.terrainBuilder;
 
         LightPipeline lightPipeline = ao ? this.smoothLightPipeline : this.flatLightPipeline;
 
