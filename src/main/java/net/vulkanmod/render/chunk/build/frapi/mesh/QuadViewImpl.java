@@ -43,7 +43,8 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadView;
 import net.vulkanmod.render.chunk.build.frapi.helper.ColorHelper;
 import net.vulkanmod.render.chunk.build.frapi.helper.GeometryHelper;
 import net.vulkanmod.render.chunk.build.frapi.helper.NormalHelper;
-import net.vulkanmod.render.chunk.build.frapi.material.RenderMaterialImpl;
+// REMOVED - Material classes no longer exist in 1.21.6+
+// import net.vulkanmod.render.chunk.build.frapi.material.RenderMaterialImpl;
 import net.minecraft.core.Direction;
 
 /**
@@ -101,7 +102,9 @@ public class QuadViewImpl implements QuadView, ModelQuadView {
 	}
 
 	public boolean hasShade() {
-		return !material().disableDiffuse();
+		// NEW API - Direct shade property (materials removed in 1.21.6+)
+		// TODO: Implement direct shade property access
+		return true; // Default - enable shading
 	}
 
 	@Override
@@ -250,10 +253,8 @@ public class QuadViewImpl implements QuadView, ModelQuadView {
 		return faceNormal;
 	}
 
-	@Override
-	public final RenderMaterialImpl material() {
-		return EncodingFormat.material(data[baseIndex + HEADER_BITS]);
-	}
+	// REMOVED - material() method no longer exists (materials removed in 1.21.6+)
+	// Material properties are now accessed directly from the quad
 
 	@Override
 	public final int colorIndex() {

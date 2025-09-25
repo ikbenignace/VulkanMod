@@ -23,8 +23,9 @@ import org.jetbrains.annotations.Nullable;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadView;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.vulkanmod.render.chunk.build.frapi.helper.GeometryHelper;
-import net.vulkanmod.render.chunk.build.frapi.material.MaterialViewImpl;
-import net.vulkanmod.render.chunk.build.frapi.material.RenderMaterialImpl;
+// REMOVED - Material classes no longer exist in 1.21.6+
+// import net.vulkanmod.render.chunk.build.frapi.material.MaterialViewImpl;
+// import net.vulkanmod.render.chunk.build.frapi.material.RenderMaterialImpl;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
@@ -85,20 +86,23 @@ public abstract class EncodingFormat {
 	private static final int LIGHT_BIT_LENGTH = Mth.ceillog2(DIRECTION_COUNT);
 	private static final int NORMALS_BIT_LENGTH = 4;
 	private static final int GEOMETRY_BIT_LENGTH = GeometryHelper.FLAG_BIT_COUNT;
-	private static final int MATERIAL_BIT_LENGTH = MaterialViewImpl.TOTAL_BIT_LENGTH;
+	// REMOVED - Material bit length no longer needed (materials removed in 1.21.6+)
+	// private static final int MATERIAL_BIT_LENGTH = MaterialViewImpl.TOTAL_BIT_LENGTH;
 
 	private static final int CULL_BIT_OFFSET = 0;
 	private static final int LIGHT_BIT_OFFSET = CULL_BIT_OFFSET + CULL_BIT_LENGTH;
 	private static final int NORMALS_BIT_OFFSET = LIGHT_BIT_OFFSET + LIGHT_BIT_LENGTH;
 	private static final int GEOMETRY_BIT_OFFSET = NORMALS_BIT_OFFSET + NORMALS_BIT_LENGTH;
-	private static final int MATERIAL_BIT_OFFSET = GEOMETRY_BIT_OFFSET + GEOMETRY_BIT_LENGTH;
-	private static final int TOTAL_BIT_LENGTH = MATERIAL_BIT_OFFSET + MATERIAL_BIT_LENGTH;
+	// REMOVED - Material bit offset no longer needed (materials removed in 1.21.6+)
+	// private static final int MATERIAL_BIT_OFFSET = GEOMETRY_BIT_OFFSET + GEOMETRY_BIT_LENGTH;
+	private static final int TOTAL_BIT_LENGTH = GEOMETRY_BIT_OFFSET + GEOMETRY_BIT_LENGTH;
 
 	private static final int CULL_MASK = bitMask(CULL_BIT_LENGTH, CULL_BIT_OFFSET);
 	private static final int LIGHT_MASK = bitMask(LIGHT_BIT_LENGTH, LIGHT_BIT_OFFSET);
 	private static final int NORMALS_MASK = bitMask(NORMALS_BIT_LENGTH, NORMALS_BIT_OFFSET);
 	private static final int GEOMETRY_MASK = bitMask(GEOMETRY_BIT_LENGTH, GEOMETRY_BIT_OFFSET);
-	private static final int MATERIAL_MASK = bitMask(MATERIAL_BIT_LENGTH, MATERIAL_BIT_OFFSET);
+	// REMOVED - Material mask no longer needed (materials removed in 1.21.6+)
+	// private static final int MATERIAL_MASK = bitMask(MATERIAL_BIT_LENGTH, MATERIAL_BIT_OFFSET);
 
 	static {
 		Preconditions.checkArgument(TOTAL_BIT_LENGTH <= 32, "Indigo header encoding bit count (%s) exceeds integer bit length)", TOTAL_STRIDE);
@@ -142,11 +146,6 @@ public abstract class EncodingFormat {
 		return (bits & ~GEOMETRY_MASK) | ((geometryFlags << GEOMETRY_BIT_OFFSET) & GEOMETRY_MASK);
 	}
 
-	static RenderMaterialImpl material(int bits) {
-		return RenderMaterialImpl.byIndex((bits & MATERIAL_MASK) >>> MATERIAL_BIT_OFFSET);
-	}
-
-	static int material(int bits, RenderMaterialImpl material) {
-		return (bits & ~MATERIAL_MASK) | (material.index() << MATERIAL_BIT_OFFSET);
-	}
+	// REMOVED - Material methods no longer needed (materials removed in 1.21.6+)
+	// Material properties are now accessed directly from quad objects
 }

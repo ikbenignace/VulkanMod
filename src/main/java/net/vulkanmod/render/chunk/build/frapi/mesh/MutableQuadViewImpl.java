@@ -27,7 +27,8 @@ import net.fabricmc.fabric.api.util.TriState;
 import net.vulkanmod.render.chunk.build.frapi.helper.ColorHelper;
 import net.vulkanmod.render.chunk.build.frapi.helper.NormalHelper;
 import net.vulkanmod.render.chunk.build.frapi.helper.TextureHelper;
-import net.vulkanmod.render.chunk.build.frapi.material.RenderMaterialImpl;
+// REMOVED - Material classes no longer exist in 1.21.6+
+// import net.vulkanmod.render.chunk.build.frapi.material.RenderMaterialImpl;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.RenderType;
@@ -54,7 +55,8 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
 		tag(0);
 		colorIndex(-1);
 		cullFace(null);
-		material(VulkanModRenderer.MATERIAL_STANDARD);
+		// REMOVED - material() call no longer needed (materials removed in 1.21.6+)
+		// Material properties are now set directly on quad objects
 	}
 
 	@Override

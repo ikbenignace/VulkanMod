@@ -9,8 +9,9 @@ import net.fabricmc.fabric.api.renderer.v1.Renderer;
 // import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
 // import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
-import net.vulkanmod.render.chunk.build.frapi.material.MaterialFinderImpl;
-import net.vulkanmod.render.chunk.build.frapi.material.RenderMaterialImpl;
+// REMOVED - Material classes no longer exist in 1.21.6+
+// import net.vulkanmod.render.chunk.build.frapi.material.MaterialFinderImpl;
+// import net.vulkanmod.render.chunk.build.frapi.material.RenderMaterialImpl;
 import net.vulkanmod.render.chunk.build.frapi.mesh.MeshBuilderImpl;
 
 /**
