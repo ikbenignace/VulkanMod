@@ -1,6 +1,6 @@
 package net.vulkanmod.vulkan.shader;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.vulkanmod.vulkan.VRenderSystem;
 import net.vulkanmod.vulkan.framebuffer.RenderPass;
 
@@ -129,19 +129,19 @@ public class PipelineState {
             this.blendOp = blendOp;
         }
 
-        public void setBlendFunction(GlStateManager.SourceFactor sourceFactor, GlStateManager.DestFactor destFactor) {
-            this.srcRgbFactor = glToVulkanBlendFactor(sourceFactor.value);
-            this.srcAlphaFactor = glToVulkanBlendFactor(sourceFactor.value);
-            this.dstRgbFactor = glToVulkanBlendFactor(destFactor.value);
-            this.dstAlphaFactor = glToVulkanBlendFactor(destFactor.value);
+        public void setBlendFunction(int sourceFactor, int destFactor) {
+            this.srcRgbFactor = glToVulkanBlendFactor(sourceFactor);
+            this.srcAlphaFactor = glToVulkanBlendFactor(sourceFactor);
+            this.dstRgbFactor = glToVulkanBlendFactor(destFactor);
+            this.dstAlphaFactor = glToVulkanBlendFactor(destFactor);
         }
 
-        public void setBlendFuncSeparate(GlStateManager.SourceFactor srcRgb, GlStateManager.DestFactor dstRgb,
-                                         GlStateManager.SourceFactor srcAlpha, GlStateManager.DestFactor dstAlpha) {
-            this.srcRgbFactor = glToVulkanBlendFactor(srcRgb.value);
-            this.srcAlphaFactor = glToVulkanBlendFactor(srcAlpha.value);
-            this.dstRgbFactor = glToVulkanBlendFactor(dstRgb.value);
-            this.dstAlphaFactor = glToVulkanBlendFactor(dstAlpha.value);
+        public void setBlendFuncSeparate(int srcRgb, int dstRgb,
+                                         int srcAlpha, int dstAlpha) {
+            this.srcRgbFactor = glToVulkanBlendFactor(srcRgb);
+            this.srcAlphaFactor = glToVulkanBlendFactor(srcAlpha);
+            this.dstRgbFactor = glToVulkanBlendFactor(dstRgb);
+            this.dstAlphaFactor = glToVulkanBlendFactor(dstAlpha);
         }
 
         /* gl to Vulkan conversion */

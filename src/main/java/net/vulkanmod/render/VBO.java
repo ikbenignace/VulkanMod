@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ShaderInstance;
+// import net.minecraft.client.renderer.ShaderInstance;  // TEMPORARILY DISABLED - ShaderInstance moved/renamed in 1.21.6+
 import net.vulkanmod.vulkan.Renderer;
 import net.vulkanmod.vulkan.VRenderSystem;
 import net.vulkanmod.vulkan.memory.*;
@@ -30,8 +30,8 @@ public class VBO {
     private int indexCount;
     private int vertexCount;
 
-    public VBO(com.mojang.blaze3d.vertex.VertexBuffer.Usage usage) {
-       this.memoryType = usage == com.mojang.blaze3d.vertex.VertexBuffer.Usage.STATIC ? MemoryTypes.GPU_MEM : MemoryTypes.HOST_MEM;
+    public VBO(boolean isStatic) {
+       this.memoryType = isStatic ? MemoryTypes.GPU_MEM : MemoryTypes.HOST_MEM;
     }
 
     public void upload(MeshData meshData) {
@@ -107,11 +107,11 @@ public class VBO {
         }
     }
 
-    public void drawWithShader(Matrix4f modelView, Matrix4f projection, ShaderInstance shaderInstance) {
+    public void drawWithShader(Matrix4f modelView, Matrix4f projection, Object shaderInstance) {  // Changed from ShaderInstance - API changed in 1.21.6+
         if (this.indexCount != 0) {
             RenderSystem.assertOnRenderThread();
 
-            RenderSystem.setShader(() -> shaderInstance);
+            // RenderSystem.setShader(() -> shaderInstance);  // TEMPORARILY DISABLED - ShaderInstance API changed
 
             VRenderSystem.applyMVP(modelView, projection);
             VRenderSystem.setPrimitiveTopologyGL(this.mode.asGLMode);
