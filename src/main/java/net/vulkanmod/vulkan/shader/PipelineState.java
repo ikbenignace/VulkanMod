@@ -145,21 +145,6 @@ public class PipelineState {
         }
 
         /* gl to Vulkan conversion */
-        public void setBlendFunction(int sourceFactor, int destFactor) {
-            this.srcRgbFactor = glToVulkanBlendFactor(sourceFactor);
-            this.srcAlphaFactor = glToVulkanBlendFactor(sourceFactor);
-            this.dstRgbFactor = glToVulkanBlendFactor(destFactor);
-            this.dstAlphaFactor = glToVulkanBlendFactor(destFactor);
-        }
-
-        /* gl to Vulkan conversion */
-        public void setBlendFuncSeparate(int srcRgb, int dstRgb, int srcAlpha, int dstAlpha) {
-            this.srcRgbFactor = glToVulkanBlendFactor(srcRgb);
-            this.srcAlphaFactor = glToVulkanBlendFactor(srcAlpha);
-            this.dstRgbFactor = glToVulkanBlendFactor(dstRgb);
-            this.dstAlphaFactor = glToVulkanBlendFactor(dstAlpha);
-        }
-
         public void setBlendOp(int i) {
             this.blendOp = glToVulkanBlendOp(i);
         }
