@@ -1,5 +1,9 @@
 package net.vulkanmod.mixin.render;
 
+// TEMPORARILY DISABLED FOR 1.21.8 - ProgramManager class was removed/moved
+// Need to find new location or alternative approach
+
+/*
 import com.mojang.blaze3d.shaders.ProgramManager;
 import com.mojang.blaze3d.shaders.Shader;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,3 +22,4 @@ public class GlProgramManagerMixin {
         ci.cancel();
     }
 }
+*/

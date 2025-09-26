@@ -1,12 +1,14 @@
 package net.vulkanmod;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+// DISABLED: Fabric Renderer API integration temporarily disabled due to API restructuring in 1.21.6+
+// import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.loader.api.FabricLoader;
 import net.vulkanmod.config.Config;
 import net.vulkanmod.config.Platform;
 import net.vulkanmod.config.video.VideoModeManager;
-import net.vulkanmod.render.chunk.build.frapi.VulkanModRenderer;
+// DISABLED: Fabric Renderer integration disabled for 1.21.8 migration
+// import net.vulkanmod.render.chunk.build.frapi.VulkanModRenderer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,7 +40,16 @@ public class Initializer implements ClientModInitializer {
 
 		CONFIG = loadConfig(configPath);
 
-		RendererAccess.INSTANCE.registerRenderer(VulkanModRenderer.INSTANCE);
+		// DISABLED: Fabric Renderer API integration temporarily disabled due to API restructuring in 1.21.6+
+		// The entire net.fabricmc.fabric.api.renderer.v1 package appears to have been removed or significantly restructured.
+		// VulkanMod's core rendering functionality remains unaffected.
+		
+		LOGGER.info("VulkanMod: Fabric Renderer integration disabled for 1.21.8 - using core Vulkan rendering");
+		
+		// TODO: Future implementation should integrate with direct Minecraft rendering APIs:
+		// - net.minecraft.client.renderer.block.BlockRenderDispatcher
+		// - net.minecraft.client.renderer.MultiBufferSource  
+		// - net.minecraft.client.renderer.RenderType
 	}
 
 	private static Config loadConfig(Path path) {
